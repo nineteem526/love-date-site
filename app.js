@@ -42,6 +42,10 @@ const showToast = (message) => {
   const toast = $('#toast'); toast.textContent = message; toast.classList.add('show');
   clearTimeout(window.toastTimer); window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
 };
+let activeRoom = null;
+let cloudSaveTimer = null;
+const SUPABASE_URL = 'https://unzcyunpvztmppvrnnzt.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_e7yStGsJ7FFcyNXtSUa09A_A6ajhae5';
 const persist = () => {
   localStorage.setItem('dateSelected', state.selectedDate);
   localStorage.setItem('calendarMonth', JSON.stringify(state.calendar));
@@ -52,7 +56,21 @@ const persist = () => {
   localStorage.setItem('dateProfile', JSON.stringify(state.profile));
   localStorage.setItem('dateMemories', JSON.stringify(state.memories));
   localStorage.setItem('dateWhispers', JSON.stringify(state.whispers));
+  if (activeRoom) scheduleCloudSave();
 };
+
+const roomSnapshot = () => ({ selectedDate: state.selectedDate, calendar: state.calendar, availability: state.availability, accepted: state.accepted, wishes: state.wishes, tasks: state.tasks, profile: state.profile, memories: state.memories, whispers: state.whispers });
+const callRoom = async (name, args) => {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args) });
+  if (!response.ok) { const detail = await response.json().catch(() => ({})); throw new Error(detail.message || '暂时无法连接专属空间。'); }
+  return response.json();
+};
+function roomCode() { return [...crypto.getRandomValues(new Uint8Array(8))].map(n => (n % 36).toString(36)).join(''); }
+function roomSlug(value) { try { const url = new URL(value); return url.searchParams.get('room') || ''; } catch { return value.trim().toLowerCase(); } }
+function renderRoomPanel() { const linked = Boolean(activeRoom); $('#roomTitle').textContent = linked ? '我们的空间正在同步' : '创建两个人的专属空间'; $('#roomStatus').textContent = linked ? `空间代码：${activeRoom.slug}。每次修改都会自动同步。` : '创建后会得到一条专属链接；清单、回忆和设置会自动同步到另一台设备。'; $('#createRoomForm').hidden = linked; $('#joinRoomForm').hidden = linked; $('#copyRoomLink').hidden = !linked; }
+function applyRoom(data) { Object.assign(state, data); persist(); renderCalendar(); renderInvite(); renderWishes(); renderTasks(); renderProfile(); renderMemories(); renderWhispers(); }
+function scheduleCloudSave() { clearTimeout(cloudSaveTimer); cloudSaveTimer = setTimeout(async () => { try { await callRoom('save_date_room', { p_slug: activeRoom.slug, p_pin: activeRoom.pin, p_data: roomSnapshot() }); } catch { showToast('本次修改暂未同步，网络恢复后会继续保存。'); } }, 650); }
+async function openRoom(slug, pin) { const result = await callRoom('open_date_room', { p_slug: slug, p_pin: pin }); activeRoom = { slug, pin }; localStorage.setItem('dateRoom', JSON.stringify(activeRoom)); history.replaceState({}, '', `${location.pathname}?room=${slug}`); applyRoom(result.data); renderRoomPanel(); }
 
 function changeView(id) {
   $$('.view').forEach(view => view.classList.toggle('active', view.id === id));
@@ -189,8 +207,16 @@ $('#settingsForm').addEventListener('submit', (event) => { event.preventDefault(
 $$('[data-theme-choice]').forEach(button => button.addEventListener('click', () => { state.profile.theme = button.dataset.themeChoice; persist(); renderProfile(); showToast('今天的氛围已换好。'); }));
 $('#memoryForm').addEventListener('submit', async (event) => { event.preventDefault(); const title = $('#memoryTitle').value.trim(); const date = $('#memoryDate').value; if (!title || !date) return; try { const photo = await imageDataFromFile($('#memoryPhoto').files[0]); state.memories.push({ date, title, note: $('#memoryNote').value.trim(), photo }); persist(); renderMemories(); event.target.reset(); $('#memoryDate').value = new Date().toISOString().slice(0, 10); showToast('这一页已经被好好收藏。'); } catch (error) { showToast(error.message); } });
 $('#whisperForm').addEventListener('submit', (event) => { event.preventDefault(); const text = $('#whisperInput').value.trim(); if (!text) return; state.whispers.push({ text, from: state.profile.personOne }); persist(); renderWhispers(); event.target.reset(); showToast('悄悄话已经放进小信箱。'); });
-$('#unlockForm').addEventListener('submit', (event) => { event.preventDefault(); const input = $('#unlockPassword'); if (input.value === state.profile.password) { sessionStorage.setItem('dateSiteUnlocked', 'true'); $('#lockScreen').classList.add('unlocked'); input.value = ''; } else { input.setCustomValidity('密码不对，再想想我们的约定。'); input.reportValidity(); input.addEventListener('input', () => input.setCustomValidity(''), { once: true }); } });
+$('#unlockForm').addEventListener('submit', async (event) => { event.preventDefault(); const input = $('#unlockPassword'); const sharedSlug = new URLSearchParams(location.search).get('room'); try { if (sharedSlug) await openRoom(sharedSlug, input.value); else if (input.value !== state.profile.password) throw new Error('密码不对，再想想我们的约定。'); sessionStorage.setItem('dateSiteUnlocked', 'true'); $('#lockScreen').classList.add('unlocked'); input.value = ''; } catch (error) { input.setCustomValidity(error.message || '暂时无法打开这个空间。'); input.reportValidity(); input.addEventListener('input', () => input.setCustomValidity(''), { once: true }); } });
+
+$('#createRoomForm').addEventListener('submit', async (event) => { event.preventDefault(); const pin = $('#createRoomPin').value.trim(); if (pin.length < 4) return; const slug = roomCode(); state.profile.password = pin; try { await callRoom('create_date_room', { p_slug: slug, p_pin: pin, p_data: roomSnapshot() }); activeRoom = { slug, pin }; localStorage.setItem('dateRoom', JSON.stringify(activeRoom)); history.replaceState({}, '', `${location.pathname}?room=${slug}`); persist(); renderProfile(); renderRoomPanel(); $('#createRoomPin').value = ''; showToast('专属空间创建完成，快把链接分享给 TA 吧。'); } catch (error) { showToast(error.message || '创建失败，请稍后重试。'); } });
+$('#joinRoomForm').addEventListener('submit', async (event) => { event.preventDefault(); const slug = roomSlug($('#joinRoomLink').value); const pin = $('#joinRoomPin').value.trim(); if (!/^[a-z0-9]{8,20}$/.test(slug)) return showToast('请粘贴正确的专属链接或空间代码。'); try { await openRoom(slug, pin); $('#joinRoomLink').value = ''; $('#joinRoomPin').value = ''; showToast('已经进入 TA 的专属空间。'); } catch (error) { showToast(error.message || '链接或密码不正确。'); } });
+$('#copyRoomLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); showToast('专属链接已复制。'); } catch { showToast('请复制浏览器地址栏中的链接。'); } });
 
 $('#memoryDate').value = new Date().toISOString().slice(0, 10);
 renderCalendar(); renderInvite(); renderWishes(); renderTasks(); renderProfile(); renderMemories(); renderWhispers();
-if (sessionStorage.getItem('dateSiteUnlocked') === 'true') $('#lockScreen').classList.add('unlocked');
+renderRoomPanel();
+const rememberedRoom = stored('dateRoom', null);
+const urlRoom = new URLSearchParams(location.search).get('room');
+if (rememberedRoom && rememberedRoom.slug === urlRoom) openRoom(rememberedRoom.slug, rememberedRoom.pin).catch(() => localStorage.removeItem('dateRoom'));
+if (sessionStorage.getItem('dateSiteUnlocked') === 'true' && !urlRoom) $('#lockScreen').classList.add('unlocked');

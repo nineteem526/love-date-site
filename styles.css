@@ -44,6 +44,9 @@
 .settings-form textarea { min-height:72px; resize:vertical; }
 .settings-form input:focus,.settings-form textarea:focus { border-color:#c18184; }
 .settings-form .button { margin-top:20px; }
+.room-panel { margin:0 0 18px; padding:25px 28px; background:#fff4ed; border:1px solid #ead3c7; box-shadow:var(--shadow); }
+.room-panel h3 { margin:7px 0 8px; font:25px "DM Serif Display","Noto Serif SC",serif; }.room-panel>p:not(.small-label) { margin:0; color:#79666a; font-size:12px; line-height:1.75; }
+.room-form { display:flex; flex-wrap:wrap; gap:8px; margin-top:13px; }.room-form input { min-width:0; flex:1 1 160px; border:1px solid #dec6bb; padding:10px 11px; background:#fffdfb; font:12px "Noto Serif SC",serif; }.room-form button,.room-copy { border:0; padding:10px 12px; background:var(--wine); color:#fff; font:700 10px "Nunito Sans",sans-serif; }.room-copy { margin-top:12px; background:transparent; color:var(--wine); border:1px solid #d8b6ac; }
 @media (max-width:800px) { .date-layout,.wish-layout,.prepare-layout,.settings-layout { grid-template-columns:1fr; }.lock-card { max-width:440px; margin:auto; } }
 
 .lock-screen { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:22px; background:rgba(247,242,237,.82); backdrop-filter:blur(15px); transition:opacity .4s, visibility .4s; }

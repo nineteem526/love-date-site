@@ -170,6 +170,15 @@
           <p>这是本地演示版，所有约会内容只保存于当前浏览器。正式上线时，可以接入真正的双人账号和云端同步。</p>
           <div class="lock-badge">♥ 私密空间已开启</div>
         </article>
+        <div>
+        <section class="room-panel" id="roomPanel">
+          <p class="small-label">SYNCED LOVE SPACE</p>
+          <h3 id="roomTitle">创建两个人的专属空间</h3>
+          <p id="roomStatus">创建后会得到一条专属链接；清单、回忆和设置会自动同步到另一台设备。</p>
+          <form id="createRoomForm" class="room-form"><input id="createRoomPin" type="password" minlength="4" maxlength="24" placeholder="设置至少 4 位专属密码" required /><button type="submit">创建并获取分享链接</button></form>
+          <form id="joinRoomForm" class="room-form"><input id="joinRoomLink" maxlength="80" placeholder="粘贴专属链接或空间代码" required /><input id="joinRoomPin" type="password" minlength="4" maxlength="24" placeholder="输入对方设置的密码" required /><button type="submit">进入已有空间</button></form>
+          <button id="copyRoomLink" class="room-copy" type="button" hidden>复制我的专属链接</button>
+        </section>
         <form class="settings-form" id="settingsForm">
           <p class="small-label">MAKE IT YOURS</p>
           <h3>我们的信息</h3>
@@ -180,6 +189,7 @@
           <fieldset class="theme-picker"><legend>今天想换一种氛围</legend><div><button type="button" data-theme-choice="classic" class="theme-choice active"><i></i>暖调浪漫</button><button type="button" data-theme-choice="night" class="theme-choice"><i></i>午夜蓝</button><button type="button" data-theme-choice="spring" class="theme-choice"><i></i>春日花园</button></div></fieldset>
           <button class="button button-primary" type="submit">保存我们的小设定 <span>♥</span></button>
         </form>
+        </div>
       </div>
     </section>
 
