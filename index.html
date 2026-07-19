@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e1520" />
+  <title>我们的约会 · 给小鹿的邀请</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Serif+SC:wght@400;500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="aurora aurora-one"></div>
+  <div class="aurora aurora-two"></div>
+  <div class="noise"></div>
+
+  <div class="lock-screen" id="lockScreen">
+    <form class="unlock-panel" id="unlockForm">
+      <span class="unlock-heart">♥</span>
+      <p class="eyebrow">A PRIVATE LITTLE PLACE</p>
+      <h1>只给你看的<br /><em>小小邀请</em></h1>
+      <p>输入我们约定的密码，打开这个专属角落。</p>
+      <input id="unlockPassword" type="password" autocomplete="current-password" placeholder="输入共享密码" required />
+      <button class="button button-primary" type="submit">打开邀请 <span>↗</span></button>
+      <small>演示密码：2026（可在“我们”页面修改）</small>
+    </form>
+  </div>
+
+  <main class="app-shell">
+    <header class="site-header">
+      <button class="brand" data-view="home" aria-label="返回首页">
+        <span class="brand-mark">J<span>♥</span>L</span>
+        <span>Jian &amp; Lu</span>
+      </button>
+      <nav class="nav-links" aria-label="主导航">
+        <button class="nav-link active" data-view="home">首页</button>
+        <button class="nav-link" data-view="date">这次约会</button>
+        <button class="nav-link" data-view="wishes">心愿单</button>
+        <button class="nav-link" data-view="prepare">准备中</button>
+        <button class="nav-link" data-view="memories">回忆</button>
+        <button class="nav-link" data-view="settings">我们</button>
+      </nav>
+      <button class="profile-button" data-view="date" aria-label="查看约会详情">
+        <span class="avatar">鹿</span>
+        <span class="online-dot"></span>
+      </button>
+    </header>
+
+    <section class="view active" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow fade-up">A LITTLE INVITATION · 2026</p>
+        <h1 class="fade-up delay-1">把周末<br /><em>留给我们</em></h1>
+        <p class="hero-text fade-up delay-2">小鹿，这不是一份普通的行程表。<br />是我想和你慢一点吃饭、散一点步的邀请。</p>
+        <div class="hero-actions fade-up delay-3">
+          <button class="button button-primary" data-view="date">打开邀请 <span>↗</span></button>
+          <button class="button button-ghost" data-view="wishes">看看你的心愿</button>
+        </div>
+        <div class="love-counter fade-up delay-4">
+          <span class="counter-icon">✦</span>
+          <p>我们已经一起走过 <strong id="daysTogether">896</strong> 天 <small id="anniversaryNote">· 纪念日正在靠近</small></p>
+        </div>
+      </div>
+      <div class="hero-art fade-up delay-2">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="date-card floating-card">
+          <span class="small-label">THIS SATURDAY</span>
+          <span class="card-day">26</span>
+          <span class="card-month">SEPTEMBER</span>
+          <i></i>
+          <span class="card-note">一整个傍晚，只属于我们</span>
+        </div>
+        <div class="polaroid polaroid-one"><span>our little moments</span><div class="polaroid-shape shape-sun"></div></div>
+        <div class="polaroid polaroid-two"><span>somewhere, with you</span><div class="polaroid-shape shape-moon"></div></div>
+        <div class="ribbon">for Lu, with love</div>
+        <span class="spark spark-one">✦</span><span class="spark spark-two">✦</span><span class="spark spark-three">♥</span>
+      </div>
+    </section>
+
+    <section class="view" id="date">
+      <div class="section-intro">
+        <p class="eyebrow">THE NEXT LITTLE ADVENTURE</p>
+        <h2>这次，想邀请你<br /><em>慢慢过一个傍晚</em></h2>
+        <p>选一个你最想见我的日子，剩下的交给我。</p>
+      </div>
+      <div class="date-layout">
+        <article class="invitation-panel glass-panel">
+          <div class="seal">J <span>♥</span> L</div>
+          <p class="small-label">DEAR LU</p>
+          <h3>可以和我<br />去约会吗？</h3>
+          <p class="invitation-note">想和你去一家有暖黄灯光的店，吃一点好吃的，饭后绕着街区散步。没有着急要完成的事，只有我们。</p>
+          <div class="location-line"><span>⌖</span><p><b>待定的惊喜餐厅</b><br />上海 · 静安区</p></div>
+          <div class="invite-response" id="inviteResponse">
+            <button class="response-yes" id="acceptInvite">好呀，我愿意</button>
+            <button class="response-later" id="maybeLater">换个时间？</button>
+          </div>
+        </article>
+        <div class="schedule-panel">
+          <div class="schedule-heading"><div><p class="small-label">PICK A DATE</p><h3>哪天方便？</h3></div><span class="calendar-icon">◫</span></div>
+          <div class="calendar-toolbar"><button class="month-button" data-calendar-nav="previous" aria-label="上一个月">←</button><b id="calendarMonthText">2026 年 9 月</b><button class="month-button" data-calendar-nav="next" aria-label="下一个月">→</button></div>
+          <div class="calendar-week"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <p class="selected-date"><span>✦</span> <span id="selectedDateText">已选：9 月 26 日，周六</span></p>
+          <div class="availability-box"><p>这一天的时间安排</p><div><button data-availability="available">我可以</button><button data-availability="busy">我不方便</button></div><small id="availabilityText">还没有标记，等你决定。</small></div>
+          <div class="plan-steps">
+            <div><span>18:30</span><p><b>在你楼下见</b><small>我带一束小花</small></p></div>
+            <div><span>19:00</span><p><b>去吃你想吃的</b><small>餐厅由你来选</small></p></div>
+            <div><span>21:00</span><p><b>散步和甜品</b><small>路过哪里就去哪里</small></p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="wishes">
+      <div class="section-intro compact-intro">
+        <p class="eyebrow">PLACES WE WANT TO GO</p>
+        <h2>你的心愿，<em>都想陪你实现</em></h2>
+        <p>把想去的餐厅放进来，这一次由你决定晚餐。</p>
+      </div>
+      <div class="wish-layout">
+        <form class="wish-form glass-panel" id="wishForm">
+          <p class="small-label">ADD A NEW ONE</p>
+          <h3>想和我吃什么？</h3>
+          <label>餐厅或菜系<input id="wishName" maxlength="35" placeholder="例如：一家好吃的日料店" required /></label>
+          <label>想说的话 <textarea id="wishNote" maxlength="80" placeholder="例如：想坐在窗边，尝尝抹茶提拉米苏"></textarea></label>
+          <button class="button button-primary" type="submit">加入心愿单 <span>+</span></button>
+        </form>
+        <div class="wish-board">
+          <div class="wish-board-heading"><div><p class="small-label">OUR LITTLE LIST</p><h3>想和你去的地方</h3></div><span id="wishCount">3 places</span></div>
+          <div class="wish-cards" id="wishCards"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="prepare">
+      <div class="section-intro compact-intro">
+        <p class="eyebrow">GETTING READY, TOGETHER</p>
+        <h2>约会前的<br /><em>一点小小期待</em></h2>
+        <p>不用准备得完美；带着轻松的心情来见面就好。</p>
+      </div>
+      <div class="prepare-layout">
+        <aside class="progress-card glass-panel">
+          <div class="progress-ring"><div><b id="progressNumber">2</b><span>/ <i id="progressTotal">5</i></span></div></div>
+          <h3>我们正在准备</h3>
+          <p id="progressCopy">已经完成 2 件小事，期待值正在上升。</p>
+          <div class="tiny-hearts">♥ ♥ ♥</div>
+        </aside>
+        <div class="checklist-card">
+          <div class="checklist-heading"><div><p class="small-label">LITTLE THINGS</p><h3>准备清单</h3></div><button id="addTaskButton" class="mini-button">＋ 添加</button></div>
+          <div class="task-list" id="taskList"></div>
+          <form class="inline-task-form" id="taskForm">
+            <input id="taskInput" maxlength="38" placeholder="写下一件想准备的小事" />
+            <button type="submit">添加</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="settings">
+      <div class="section-intro compact-intro">
+        <p class="eyebrow">JUST FOR THE TWO OF US</p>
+        <h2>把这个小角落<br /><em>变成我们的样子</em></h2>
+        <p>设置会保存在当前设备，下次打开仍然会记得。</p>
+      </div>
+      <div class="settings-layout">
+        <article class="lock-card glass-panel">
+          <span class="lock-symbol">⌾</span>
+          <p class="small-label">PRIVATE SPACE</p>
+          <h3>只属于你和我</h3>
+          <p>这是本地演示版，所有约会内容只保存于当前浏览器。正式上线时，可以接入真正的双人账号和云端同步。</p>
+          <div class="lock-badge">♥ 私密空间已开启</div>
+        </article>
+        <form class="settings-form" id="settingsForm">
+          <p class="small-label">MAKE IT YOURS</p>
+          <h3>我们的信息</h3>
+          <div class="settings-row"><label>你的名字<input id="personOne" maxlength="12" value="Jian" /></label><label>对方的名字<input id="personTwo" maxlength="12" value="Lu" /></label></div>
+          <label>开始相识的日期<input id="startDate" type="date" value="2024-02-14" /></label>
+          <label>首页想说的话<textarea id="homeMessage" maxlength="80">小鹿，这不是一份普通的行程表。是我想和你慢一点吃饭、散一点步的邀请。</textarea></label>
+          <label>你们的共享密码<input id="sharedPassword" type="password" minlength="4" maxlength="24" value="2026" /></label>
+          <fieldset class="theme-picker"><legend>今天想换一种氛围</legend><div><button type="button" data-theme-choice="classic" class="theme-choice active"><i></i>暖调浪漫</button><button type="button" data-theme-choice="night" class="theme-choice"><i></i>午夜蓝</button><button type="button" data-theme-choice="spring" class="theme-choice"><i></i>春日花园</button></div></fieldset>
+          <button class="button button-primary" type="submit">保存我们的小设定 <span>♥</span></button>
+        </form>
+      </div>
+    </section>
+
+    <section class="view" id="memories">
+      <div class="section-intro compact-intro">
+        <p class="eyebrow">THE STORY WE ARE WRITING</p>
+        <h2>把每一个平凡的<br /><em>“我们”都收藏起来</em></h2>
+        <p>照片、约会和当时想说的话，会慢慢成为只属于我们的时间线。</p>
+      </div>
+      <div class="memory-layout">
+        <div class="memory-column">
+          <form class="memory-form glass-panel" id="memoryForm">
+            <p class="small-label">ADD A LITTLE MEMORY</p>
+            <h3>留下一页回忆</h3>
+            <label>这一天<input id="memoryDate" type="date" required /></label>
+            <label>小标题<input id="memoryTitle" maxlength="28" placeholder="例如：雨天一起吃了热面" required /></label>
+            <label>想记住的话<textarea id="memoryNote" maxlength="120" placeholder="今天发生了什么？"></textarea></label>
+            <label class="photo-upload">选一张照片<input id="memoryPhoto" type="file" accept="image/*" /><span>＋ 从相册挑选（可选）</span></label>
+            <button class="button button-primary" type="submit">收藏这一天 <span>♥</span></button>
+          </form>
+          <div class="anniversary-card">
+            <span>✦</span><div><p class="small-label">OUR NEXT LITTLE CELEBRATION</p><h3 id="anniversaryTitle">下一次纪念日</h3><p id="anniversaryDetail">正在计算中…</p></div>
+          </div>
+        </div>
+        <div class="timeline-column">
+          <div class="timeline-heading"><div><p class="small-label">OUR TIMELINE</p><h3>恋爱小档案</h3></div><span id="memoryCount">0 moments</span></div>
+          <div class="timeline" id="timeline"></div>
+          <div class="whisper-panel">
+            <div class="whisper-heading"><div><p class="small-label">A NOTE JUST FOR YOU</p><h3>悄悄话</h3></div><span>♡</span></div>
+            <div class="whisper-list" id="whisperList"></div>
+            <form class="whisper-form" id="whisperForm"><input id="whisperInput" maxlength="90" placeholder="留一句只想对 TA 说的话" required /><button type="submit">送出</button></form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
