@@ -16,15 +16,40 @@
   <div class="noise"></div>
 
   <div class="lock-screen" id="lockScreen">
-    <form class="unlock-panel" id="unlockForm">
-      <span class="unlock-heart">♥</span>
-      <p class="eyebrow">A PRIVATE LITTLE PLACE</p>
-      <h1>只给你看的<br /><em>小小邀请</em></h1>
-      <p>输入我们约定的密码，打开这个专属角落。</p>
-      <input id="unlockPassword" type="password" autocomplete="current-password" placeholder="输入共享密码" required />
-      <button class="button button-primary" type="submit">打开邀请 <span>↗</span></button>
-      <small>演示密码：2026（可在“我们”页面修改）</small>
-    </form>
+    <section class="unlock-panel" aria-live="polite">
+      <div id="createSpaceEntry">
+        <span class="unlock-heart">♥</span>
+        <p class="eyebrow">A PRIVATE LITTLE PLACE</p>
+        <h1>从这里开始<br /><em>你们的故事</em></h1>
+        <p>创建一个只属于你们的约会空间。之后可以邀请 TA 一起来写、一起看。</p>
+        <form id="createSpaceForm" class="entry-form">
+          <div class="entry-names"><input id="entryPersonOne" maxlength="12" autocomplete="nickname" placeholder="你的名字" required /><input id="entryPersonTwo" maxlength="12" autocomplete="nickname" placeholder="TA 的名字" required /></div>
+          <input id="entryCreatePin" type="password" minlength="4" maxlength="24" autocomplete="new-password" placeholder="设置至少 4 位空间密码" required />
+          <button class="button button-primary" type="submit">创建我的专属空间 <span>↗</span></button>
+        </form>
+        <button id="showJoinEntry" class="entry-switch" type="button">已经收到邀请？进入 TA 的空间</button>
+      </div>
+      <div id="joinSpaceEntry" hidden>
+        <span class="unlock-heart">♥</span>
+        <p class="eyebrow">AN INVITATION FOR YOU</p>
+        <h1>进入 TA 的<br /><em>专属空间</em></h1>
+        <p>粘贴 TA 分享给你的邀请链接，再输入约定好的空间密码。</p>
+        <form id="joinSpaceForm" class="entry-form">
+          <input id="entryJoinLink" maxlength="160" autocomplete="url" placeholder="粘贴邀请链接或空间代码" required />
+          <input id="entryJoinPin" type="password" minlength="4" maxlength="24" autocomplete="current-password" placeholder="输入空间密码" required />
+          <button class="button button-primary" type="submit">打开 TA 的空间 <span>↗</span></button>
+        </form>
+        <button id="showCreateEntry" class="entry-switch" type="button">我想创建自己的空间</button>
+      </div>
+      <form id="unlockForm" hidden>
+        <span class="unlock-heart">♥</span>
+        <p class="eyebrow">AN INVITATION FOR YOU</p>
+        <h1>你收到了一份<br /><em>小小邀请</em></h1>
+        <p>输入 TA 为这个空间设定的密码，打开你们的专属角落。</p>
+        <input id="unlockPassword" type="password" autocomplete="current-password" placeholder="输入空间密码" required />
+        <button class="button button-primary" type="submit">打开邀请 <span>↗</span></button>
+      </form>
+    </section>
   </div>
 
   <main class="app-shell">
@@ -171,13 +196,11 @@
           <div class="lock-badge">♥ 私密空间已开启</div>
         </article>
         <div>
-        <section class="room-panel" id="roomPanel">
+        <section class="room-panel" id="roomPanel" hidden>
           <p class="small-label">SYNCED LOVE SPACE</p>
-          <h3 id="roomTitle">创建两个人的专属空间</h3>
-          <p id="roomStatus">创建后会得到一条专属链接；清单、回忆和设置会自动同步到另一台设备。</p>
-          <form id="createRoomForm" class="room-form"><input id="createRoomPin" type="password" minlength="4" maxlength="24" placeholder="设置至少 4 位专属密码" required /><button type="submit">创建并获取分享链接</button></form>
-          <form id="joinRoomForm" class="room-form"><input id="joinRoomLink" maxlength="80" placeholder="粘贴专属链接或空间代码" required /><input id="joinRoomPin" type="password" minlength="4" maxlength="24" placeholder="输入对方设置的密码" required /><button type="submit">进入已有空间</button></form>
-          <button id="copyRoomLink" class="room-copy" type="button" hidden>复制我的专属链接</button>
+          <h3 id="roomTitle">你们的空间正在同步</h3>
+          <p id="roomStatus">把邀请链接和空间密码分享给 TA，就能一起写下属于你们的故事。</p>
+          <button id="copyRoomLink" class="room-copy" type="button">复制邀请链接</button>
         </section>
         <form class="settings-form" id="settingsForm">
           <p class="small-label">MAKE IT YOURS</p>
@@ -185,7 +208,7 @@
           <div class="settings-row"><label>你的名字<input id="personOne" maxlength="12" value="Jian" /></label><label>对方的名字<input id="personTwo" maxlength="12" value="Lu" /></label></div>
           <label>开始相识的日期<input id="startDate" type="date" value="2024-02-14" /></label>
           <label>首页想说的话<textarea id="homeMessage" maxlength="80">小鹿，这不是一份普通的行程表。是我想和你慢一点吃饭、散一点步的邀请。</textarea></label>
-          <label>你们的共享密码<input id="sharedPassword" type="password" minlength="4" maxlength="24" value="2026" /></label>
+          <p class="settings-hint">空间密码由创建者设定。想进入别人的空间时，请使用对方分享的邀请链接和密码。</p>
           <fieldset class="theme-picker"><legend>今天想换一种氛围</legend><div><button type="button" data-theme-choice="classic" class="theme-choice active"><i></i>暖调浪漫</button><button type="button" data-theme-choice="night" class="theme-choice"><i></i>午夜蓝</button><button type="button" data-theme-choice="spring" class="theme-choice"><i></i>春日花园</button></div></fieldset>
           <button class="button button-primary" type="submit">保存我们的小设定 <span>♥</span></button>
         </form>
